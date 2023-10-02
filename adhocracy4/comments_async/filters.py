@@ -21,7 +21,6 @@ class CommentOrderingFilterBackend(BaseFilterBackend):
     """Order the comments."""
 
     def filter_queryset(self, request, queryset, view):
-
         if "ordering" in request.GET:
             ordering = request.GET["ordering"]
 
@@ -62,6 +61,11 @@ class CommentOrderingFilterBackend(BaseFilterBackend):
                 )
             elif ordering == "mom":
                 return queryset.order_by("-is_moderator_marked", "-created")
+            elif ordering == "qua":
+                return queryset.order_by(
+                    models.F("quality").desc(nulls_last=True), "-created"
+                    #"-quality", "-created"
+                )
 
         return queryset
 
